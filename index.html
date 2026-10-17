@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum-Grid Autonomous Dual-Harvest Smart Truck | HCL Jigsaw</title>
+    <!-- Tailwind CSS & FontAwesome & Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         :root[data-theme="cyberpunk"] {
             --bg-grad: linear-gradient(135deg, #090a0f 0%, #121824 50%, #1a0b2e 100%);
@@ -16,103 +30,187 @@
             --secondary: #ff007f;
             --accent: #39ff14;
             --text-main: #f0f4f8;
+            --glow-primary: 0 0 20px rgba(0, 243, 255, 0.4);
+            --glow-secondary: 0 0 20px rgba(255, 0, 127, 0.4);
         }
-        body { background: var(--bg-grad); color: var(--text-main); font-family: 'Inter', sans-serif; min-height: 100vh; }
+        :root[data-theme="matrix"] {
+            --bg-grad: linear-gradient(135deg, #020802 0%, #051a05 50%, #0a2e0a 100%);
+            --card-bg: rgba(5, 26, 5, 0.85);
+            --card-border: rgba(57, 255, 20, 0.4);
+            --primary: #39ff14;
+            --secondary: #00ff66;
+            --accent: #ccff00;
+            --text-main: #e2ffe2;
+            --glow-primary: 0 0 20px rgba(57, 255, 20, 0.5);
+            --glow-secondary: 0 0 20px rgba(0, 255, 102, 0.4);
+        }
+        :root[data-theme="solarized"] {
+            --bg-grad: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --card-border: rgba(245, 158, 11, 0.4);
+            --primary: #f59e0b;
+            --secondary: #38bdf8;
+            --accent: #10b981;
+            --text-main: #f8fafc;
+            --glow-primary: 0 0 20px rgba(245, 158, 11, 0.4);
+            --glow-secondary: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        body {
+            background: var(--bg-grad);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        .glass-card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid var(--card-border); }
-        .glow-btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
-        .tab-btn.active { background: var(--primary); color: #090a0f; font-weight: 700; }
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glow-btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: var(--glow-primary);
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #090a0f;
+            font-weight: 700;
+            box-shadow: var(--glow-primary);
+        }
     </style>
 </head>
-<body class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+<body class="selection:bg-cyan-500 selection:text-black">
 
-    <header class="glass-card p-4 rounded-2xl flex justify-between items-center flex-wrap gap-4">
-        <div>
-            <h1 class="font-orbitron font-black text-xl text-cyan-400">QUANTUM-GRID SMART TRUCK</h1>
-            <p class="text-xs text-slate-400">HCL Jigsaw | Team A-Squad</p>
+    <header class="sticky top-0 z-50 glass-card border-b border-cyan-500/20 px-4 lg:px-8 py-3 flex justify-between items-center gap-4">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl glow-btn-primary flex items-center justify-center text-black font-black text-xl font-orbitron">QT</div>
+            <div>
+                <h1 class="font-orbitron font-black text-lg lg:text-xl tracking-wider text-cyan-400">QUANTUM-GRID 18-WHEELER</h1>
+                <p class="text-xs text-slate-400">HCL Jigsaw Innovation Round | Team A-Squad</p>
+            </div>
         </div>
-        <div class="flex gap-2">
-            <button onclick="switchTab('sim')" id="btn-sim" class="tab-btn active px-4 py-2 rounded-xl text-xs font-bold transition">Simulation</button>
-            <button onclick="switchTab('team')" id="btn-team" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 transition">Team A-Squad</button>
+        <div class="flex items-center space-x-2">
+            <button onclick="setTheme('cyberpunk')" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-cyan-400 bg-slate-900 border border-slate-700">Cyber</button>
+            <button onclick="setTheme('matrix')" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-green-400 bg-slate-900 border border-slate-700">Matrix</button>
+            <button onclick="setTheme('solarized')" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-amber-400 bg-slate-900 border border-slate-700">Solar</button>
         </div>
     </header>
 
-    <!-- SIMULATION TAB -->
-    <section id="tab-sim" class="glass-card p-6 rounded-2xl space-y-4">
-        <div class="flex justify-between items-center flex-wrap gap-2">
-            <h2 class="font-orbitron font-bold text-cyan-400 text-base"><i class="fa-solid fa-wind mr-2"></i> Solar Roof & Micro-Turbine Simulation</h2>
-            <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-lg text-xs font-mono" id="speed-label">Speed: 65 KM/H</span>
-        </div>
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <nav class="flex gap-2 glass-card p-2 rounded-2xl">
+            <button onclick="switchTab('simulation')" id="btn-simulation" class="tab-btn active px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
+                <i class="fa-solid fa-truck-fast"></i><span>Smart Truck Sim</span>
+            </button>
+            <button onclick="switchTab('team')" id="btn-team" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2 text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-users"></i><span>Team A-Squad</span>
+            </button>
+        </nav>
 
-        <div class="relative w-full h-[380px] bg-slate-950 rounded-xl overflow-hidden border border-cyan-500/30">
-            <canvas id="simCanvas" class="w-full h-full block"></canvas>
-        </div>
+        <!-- SIMULATION TAB -->
+        <section id="tab-simulation" class="space-y-6">
+            <div class="glass-card rounded-2xl p-5 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-orbitron font-bold text-lg text-cyan-400 flex items-center gap-2">
+                        <i class="fa-solid fa-wind"></i> Solar Roof & Micro-Turbine Simulation
+                    </h2>
+                    <span class="px-3 py-1 rounded-md bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold border border-cyan-500/30" id="sim-speed-badge">65 KM/H</span>
+                </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-                <label class="text-xs text-slate-400 block mb-1">Truck Speed</label>
-                <input type="range" min="20" max="120" value="65" class="w-full accent-cyan-400" oninput="speed = Number(this.value); document.getElementById('speed-label').innerText = 'Speed: ' + speed + ' KM/H';">
-            </div>
-            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-                <label class="text-xs text-slate-400 block mb-1">Sunlight Intensity</label>
-                <input type="range" min="0" max="100" value="85" class="w-full accent-amber-400" oninput="sunPower = Number(this.value);">
-            </div>
-        </div>
-    </section>
+                <div class="relative w-full h-[380px] bg-slate-950 rounded-xl overflow-hidden border border-cyan-500/30">
+                    <canvas id="truckCanvas" class="w-full h-full block"></canvas>
+                </div>
 
-    <!-- TEAM TAB -->
-    <section id="tab-team" class="glass-card p-8 rounded-2xl space-y-6 hidden max-w-xl mx-auto text-center">
-        <div class="w-16 h-16 mx-auto rounded-xl glow-btn-primary flex items-center justify-center text-black font-black text-2xl font-orbitron">AS</div>
-        <h2 class="font-orbitron font-bold text-2xl text-cyan-400">Team A-Squad</h2>
-        <div class="bg-slate-900/60 p-5 rounded-xl border border-cyan-500/30 text-left space-y-3 font-mono text-xs">
-            <div class="flex justify-between border-b border-slate-800 pb-2">
-                <span class="text-slate-400">Team Coordinator & Idea Generator</span>
-                <span class="text-cyan-400 font-bold">Arnav Kulkarni</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-400">Truck Speed</span>
+                            <span id="val-speed" class="text-cyan-400 font-mono font-bold">65 km/h</span>
+                        </div>
+                        <input type="range" id="range-speed" min="20" max="120" value="65" class="w-full accent-cyan-400 cursor-pointer" oninput="updateSpeed(this.value)">
+                    </div>
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-400">Sunlight Intensity</span>
+                            <span id="val-sun" class="text-amber-400 font-mono font-bold">85%</span>
+                        </div>
+                        <input type="range" id="range-sun" min="0" max="100" value="85" class="w-full accent-amber-400 cursor-pointer" oninput="updateSun(this.value)">
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-between">
-                <span class="text-slate-400">Project Focus</span>
-                <span class="text-pink-400 font-bold">Autonomous Dual-Harvest Smart Truck</span>
+        </section>
+
+        <!-- TEAM TAB -->
+        <section id="tab-team" class="hidden space-y-6">
+            <div class="glass-card rounded-2xl p-8 space-y-6 text-center max-w-2xl mx-auto">
+                <div class="w-20 h-20 mx-auto rounded-2xl glow-btn-primary flex items-center justify-center text-black font-black text-3xl font-orbitron">AS</div>
+                <div>
+                    <h2 class="font-orbitron font-bold text-2xl text-cyan-400">Team A-Squad</h2>
+                    <p class="text-sm text-slate-400">HCL Jigsaw Innovation Competition</p>
+                </div>
+                <div class="bg-slate-900/60 p-6 rounded-xl border border-cyan-500/30 text-left space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400 text-xs uppercase font-mono">Team Coordinator & Idea Generator</span>
+                        <span class="text-cyan-400 font-bold font-orbitron">Arnav Kulkarni</span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <script>
-        function switchTab(tab) {
-            document.getElementById('tab-sim').classList.toggle('hidden', tab !== 'sim');
-            document.getElementById('tab-team').classList.toggle('hidden', tab !== 'team');
-            document.getElementById('btn-sim').classList.toggle('active', tab === 'sim');
-            document.getElementById('btn-team').classList.toggle('active', tab === 'team');
+        function setTheme(theme) { document.documentElement.setAttribute('data-theme', theme); }
+        function switchTab(tabId) {
+            document.getElementById('tab-simulation').classList.toggle('hidden', tabId !== 'simulation');
+            document.getElementById('tab-team').classList.toggle('hidden', tabId !== 'team');
+            document.getElementById('btn-simulation').classList.toggle('active', tabId === 'simulation');
+            document.getElementById('btn-team').classList.toggle('active', tabId === 'team');
         }
 
-        const canvas = document.getElementById('simCanvas');
+        let currentSpeed = 65;
+        let currentSun = 85;
+
+        function updateSpeed(val) {
+            currentSpeed = Number(val);
+            document.getElementById('val-speed').innerText = val + ' km/h';
+            document.getElementById('sim-speed-badge').innerText = val + ' KM/H';
+        }
+        function updateSun(val) {
+            currentSun = Number(val);
+            document.getElementById('val-sun').innerText = val + '%';
+        }
+
+        const canvas = document.getElementById('truckCanvas');
         const ctx = canvas.getContext('2d');
 
-        function resize() {
+        function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
         }
-        window.addEventListener('resize', resize);
-        resize();
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        let speed = 65;
-        let sunPower = 85;
         let roadOffset = 0;
         let turbineAngle = 0;
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Sky background
+            // Sky
             ctx.fillStyle = '#090a0f';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Road
-            let roadY = canvas.height - 80;
+            const roadY = canvas.height - 80;
             ctx.fillStyle = '#121824';
             ctx.fillRect(0, roadY, canvas.width, 80);
 
-            // Road lines
-            roadOffset = (roadOffset + speed * 0.1) % 40;
+            // Road Markings
+            roadOffset = (roadOffset + currentSpeed * 0.1) % 40;
             ctx.strokeStyle = '#00f3ff';
             ctx.lineWidth = 3;
             ctx.setLineDash([20, 20]);
@@ -123,19 +221,19 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Truck coordinates
-            let truckX = canvas.width / 2 - 100;
-            let truckY = roadY - 70;
+            // Truck Coordinates
+            const truckX = canvas.width / 2 - 100;
+            const truckY = roadY - 70;
 
-            // Trailer body
+            // Trailer
             ctx.fillStyle = '#1e293b';
             ctx.strokeStyle = '#00f3ff';
             ctx.lineWidth = 2;
             ctx.fillRect(truckX - 90, truckY, 180, 50);
             ctx.strokeRect(truckX - 90, truckY, 180, 50);
 
-            // Solar Roof Panels
-            ctx.fillStyle = sunPower > 0 ? '#f59e0b' : '#334155';
+            // Solar Roof
+            ctx.fillStyle = currentSun > 0 ? '#f59e0b' : '#334155';
             for(let i=0; i<5; i++) {
                 ctx.fillRect(truckX - 80 + (i * 32), truckY - 4, 26, 4);
             }
@@ -145,8 +243,8 @@
             ctx.fillRect(truckX + 90, truckY - 10, 65, 60);
             ctx.strokeRect(truckX + 90, truckY - 10, 65, 60);
 
-            // Wind Turbine in front bumper
-            turbineAngle += speed * 0.15;
+            // Micro-Turbine in front
+            turbineAngle += (currentSpeed * 0.2);
             let turbX = truckX + 155;
             let turbY = truckY + 30;
             ctx.fillStyle = '#334155';
