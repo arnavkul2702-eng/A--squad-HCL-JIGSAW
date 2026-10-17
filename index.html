@@ -106,7 +106,6 @@
             box-shadow: var(--glow-primary);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #090a0f; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
@@ -128,7 +127,6 @@
             </div>
         </div>
 
-        <!-- Theme Switcher & Quick Controls -->
         <div class="flex items-center space-x-3">
             <div class="flex bg-slate-900/80 p-1 rounded-xl border border-slate-700">
                 <button onclick="setTheme('cyberpunk')" title="Cyberpunk" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-cyan-400 hover:bg-slate-800">Cyber</button>
@@ -164,7 +162,6 @@
         <!-- TAB 1: SIMULATION -->
         <section id="tab-simulation" class="space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Simulation Canvas Card (2 Cols) -->
                 <div class="lg:col-span-2 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
                     <div class="flex justify-between items-center">
                         <div>
@@ -178,11 +175,9 @@
                         </div>
                     </div>
 
-                    <!-- Canvas Area -->
                     <div class="relative w-full h-[360px] md:h-[420px] bg-slate-950/80 rounded-xl overflow-hidden border border-cyan-500/30 shadow-inner">
                         <canvas id="truckCanvas" class="w-full h-full block cursor-pointer"></canvas>
                         
-                        <!-- HUD Overlays -->
                         <div class="absolute top-4 left-4 glass-card px-3 py-1.5 rounded-lg text-xs font-mono flex items-center space-x-2">
                             <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
                             <span class="text-amber-300">SOLAR ROOF: <strong id="hud-solar" class="text-white">85%</strong></span>
@@ -198,7 +193,6 @@
                         </div>
                     </div>
 
-                    <!-- Interactive Control Deck -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
                             <div class="flex justify-between text-xs mb-1">
@@ -226,7 +220,6 @@
                     </div>
                 </div>
 
-                <!-- Live Metrics Sidebar (1 Col) -->
                 <div class="space-y-4">
                     <div class="glass-card rounded-2xl p-5 space-y-4">
                         <h3 class="font-orbitron font-bold text-sm text-pink-400 flex items-center gap-2">
@@ -259,7 +252,6 @@
                         </div>
                     </div>
 
-                    <!-- Quick Spec Highlights -->
                     <div class="glass-card rounded-2xl p-5 space-y-3">
                         <h4 class="font-orbitron font-bold text-xs text-cyan-400">DUAL-HARVEST SPECS</h4>
                         <ul class="text-xs text-slate-300 space-y-2">
@@ -275,7 +267,6 @@
         <!-- TAB 2: TELEMETRY & POWER -->
         <section id="tab-telemetry" class="hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card 1 -->
                 <div class="glass-card rounded-2xl p-6 space-y-4">
                     <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl font-bold border border-amber-500/30">
                         <i class="fa-solid fa-sun"></i>
@@ -290,7 +281,6 @@
                     </div>
                 </div>
 
-                <!-- Card 2 -->
                 <div class="glass-card rounded-2xl p-6 space-y-4">
                     <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold border border-cyan-500/30">
                         <i class="fa-solid fa-wind"></i>
@@ -305,7 +295,6 @@
                     </div>
                 </div>
 
-                <!-- Card 3 -->
                 <div class="glass-card rounded-2xl p-6 space-y-4">
                     <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold border border-emerald-500/30">
                         <i class="fa-solid fa-microchip"></i>
@@ -389,12 +378,10 @@
 
     <!-- JavaScript for Simulation & Interactivity -->
     <script>
-        // Theme Switcher
         function setTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
         }
 
-        // Tab Switcher
         function switchTab(tabId) {
             ['simulation', 'telemetry', 'innovation', 'team'].forEach(id => {
                 document.getElementById('tab-' + id).classList.add('hidden');
@@ -407,7 +394,6 @@
             activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
         }
 
-        // Sliders & Controls
         let currentSpeed = 65;
         let currentSun = 85;
         let aiEngaged = true;
@@ -452,13 +438,14 @@
             }, 1500);
         }
 
-        // Canvas Simulation with Solar & Turbines
         const canvas = document.getElementById('truckCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+            if(canvas.parentElement) {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
@@ -480,18 +467,15 @@
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Background Sky
             ctx.fillStyle = '#090a0f';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Horizon Glow
             let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
             grad.addColorStop(0, 'rgba(0, 243, 255, 0.08)');
             grad.addColorStop(1, 'rgba(0, 0, 0, 0.9)');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw Sun Rays from Top Right if sun > 0
             if (currentSun > 0) {
                 sunBeamOffset = (sunBeamOffset + 0.5) % 100;
                 ctx.strokeStyle = `rgba(245, 158, 11, ${currentSun / 300})`;
@@ -504,12 +488,10 @@
                 ctx.stroke();
             }
 
-            // Draw Road
             const roadY = canvas.height - 90;
             ctx.fillStyle = '#121824';
             ctx.fillRect(0, roadY, canvas.width, 90);
 
-            // Road markings
             roadOffset = (roadOffset + currentSpeed * 0.1) % 40;
             ctx.strokeStyle = '#00f3ff';
             ctx.lineWidth = 3;
@@ -521,7 +503,6 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Draw Oncoming Wind Stream Particles hitting the Turbine
             ctx.fillStyle = '#38bdf8';
             windParticles.forEach(p => {
                 p.x -= p.speed * (currentSpeed / 40);
@@ -529,33 +510,27 @@
                 ctx.fillRect(p.x, p.y, p.size * 3, p.size);
             });
 
-            // Draw Smart Truck (Semi-Trailer 18-Wheeler with Solar & Turbine)
             const truckX = canvas.width / 2 - 120;
             const truckY = roadY - 75;
 
-            // Trailer Body
             ctx.fillStyle = '#1e293b';
             ctx.strokeStyle = '#00f3ff';
             ctx.lineWidth = 2;
             ctx.fillRect(truckX - 100, truckY + 5, 200, 55);
             ctx.strokeRect(truckX - 100, truckY + 5, 200, 55);
 
-            // Solar Roof Panels (Glowing Amber/Blue when active)
             ctx.fillStyle = currentSun > 0 ? '#f59e0b' : '#334155';
             for(let i=0; i<6; i++) {
                 ctx.fillRect(truckX - 90 + (i * 32), truckY + 2, 28, 5);
             }
 
-            // Truck Cab
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(truckX + 100, truckY - 10, 75, 70);
             ctx.strokeRect(truckX + 100, truckY - 10, 75, 70);
 
-            // Cab Windshield
             ctx.fillStyle = 'rgba(0, 243, 255, 0.3)';
             ctx.fillRect(truckX + 145, truckY, 25, 30);
 
-            // FRONT WIND MICRO-TURBINE (Built into front bumper intake)
             turbineAngle += (currentSpeed * 0.2);
             const turbineX = truckX + 175;
             const turbineY = truckY + 35;
@@ -568,7 +543,6 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Spinning Turbine Blades
             ctx.save();
             ctx.translate(turbineX, turbineY);
             ctx.rotate(turbineAngle);
@@ -583,7 +557,6 @@
             }
             ctx.restore();
 
-            // Wheels (18-wheeler dual setup)
             const wheelRadius = 16;
             const wheelY = roadY + 5;
             [truckX - 80, truckX - 50, truckX + 20, truckX + 110, truckX + 145].forEach(wx => {
@@ -595,14 +568,12 @@
                 ctx.lineWidth = 3;
                 ctx.stroke();
 
-                // Hubcap
                 ctx.fillStyle = '#00f3ff';
                 ctx.beginPath();
                 ctx.arc(wx, wheelY, 5, 0, Math.PI * 2);
                 ctx.fill();
             });
 
-            // Autonomous Sensor Ring atop cab
             ctx.fillStyle = '#ff007f';
             ctx.beginPath();
             ctx.arc(truckX + 130, truckY - 15, 4, 0, Math.PI * 2);
