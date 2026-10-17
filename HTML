@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyberpunk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum-Grid Autonomous Dual-Harvest Smart Truck | HCL Jigsaw</title>
+    <!-- Tailwind CSS & FontAwesome & Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Multi-Theme Color Palettes */
+        :root[data-theme="cyberpunk"] {
+            --bg-grad: linear-gradient(135deg, #090a0f 0%, #121824 50%, #1a0b2e 100%);
+            --card-bg: rgba(18, 24, 38, 0.75);
+            --card-border: rgba(0, 243, 255, 0.3);
+            --primary: #00f3ff;
+            --secondary: #ff007f;
+            --accent: #39ff14;
+            --text-main: #f0f4f8;
+            --text-muted: #94a3b8;
+            --glow-primary: 0 0 20px rgba(0, 243, 255, 0.4);
+            --glow-secondary: 0 0 20px rgba(255, 0, 127, 0.4);
+        }
+        :root[data-theme="matrix"] {
+            --bg-grad: linear-gradient(135deg, #020802 0%, #051a05 50%, #0a2e0a 100%);
+            --card-bg: rgba(5, 26, 5, 0.8);
+            --card-border: rgba(57, 255, 20, 0.4);
+            --primary: #39ff14;
+            --secondary: #00ff66;
+            --accent: #ccff00;
+            --text-main: #e2ffe2;
+            --text-muted: #8fa88f;
+            --glow-primary: 0 0 20px rgba(57, 255, 20, 0.5);
+            --glow-secondary: 0 0 20px rgba(0, 255, 102, 0.4);
+        }
+        :root[data-theme="solarized"] {
+            --bg-grad: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --card-border: rgba(245, 158, 11, 0.4);
+            --primary: #f59e0b;
+            --secondary: #38bdf8;
+            --accent: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glow-primary: 0 0 20px rgba(245, 158, 11, 0.4);
+            --glow-secondary: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+        :root[data-theme="quantum"] {
+            --bg-grad: linear-gradient(135deg, #050515 0%, #120c2e 50%, #20053b 100%);
+            --card-bg: rgba(20, 14, 40, 0.8);
+            --card-border: rgba(168, 85, 247, 0.4);
+            --primary: #c084fc;
+            --secondary: #ec4899;
+            --accent: #38bdf8;
+            --text-main: #faf5ff;
+            --text-muted: #cbd5e1;
+            --glow-primary: 0 0 20px rgba(192, 132, 252, 0.5);
+            --glow-secondary: 0 0 20px rgba(236, 72, 153, 0.4);
+        }
+
+        body {
+            background: var(--bg-grad);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glow-btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: var(--glow-primary);
+            transition: all 0.3s ease;
+        }
+        .glow-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-secondary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #090a0f;
+            font-weight: 700;
+            box-shadow: var(--glow-primary);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #090a0f; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-black">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-card border-b border-cyan-500/20 px-4 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl glow-btn-primary flex items-center justify-center text-black font-black text-xl font-orbitron">
+                QT
+            </div>
+            <div>
+                <h1 class="font-orbitron font-black text-lg lg:text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-green-400">
+                    QUANTUM-GRID 18-WHEELER
+                </h1>
+                <p class="text-xs text-slate-400">HCL Jigsaw Innovation Round | Team A-Squad</p>
+            </div>
+        </div>
+
+        <!-- Theme Switcher & Quick Controls -->
+        <div class="flex items-center space-x-3">
+            <div class="flex bg-slate-900/80 p-1 rounded-xl border border-slate-700">
+                <button onclick="setTheme('cyberpunk')" title="Cyberpunk" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-cyan-400 hover:bg-slate-800">Cyber</button>
+                <button onclick="setTheme('matrix')" title="Matrix" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-green-400 hover:bg-slate-800">Matrix</button>
+                <button onclick="setTheme('solarized')" title="Solar" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-amber-400 hover:bg-slate-800">Solar</button>
+                <button onclick="setTheme('quantum')" title="Quantum" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-purple-400 hover:bg-slate-800">Quantum</button>
+            </div>
+            <span class="hidden md:inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse">
+                <i class="fa-solid fa-circle text-[8px] mr-1"></i> AI Core Online
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+        <!-- Navigation Tabs -->
+        <nav class="flex flex-wrap gap-2 glass-card p-2 rounded-2xl justify-center lg:justify-start">
+            <button onclick="switchTab('simulation')" id="btn-simulation" class="tab-btn active px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
+                <i class="fa-solid fa-truck-fast"></i><span>Smart Truck Sim</span>
+            </button>
+            <button onclick="switchTab('telemetry')" id="btn-telemetry" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2 text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-chart-line"></i><span>Telemetry & Power</span>
+            </button>
+            <button onclick="switchTab('innovation')" id="btn-innovation" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2 text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-lightbulb"></i><span>Dual-Harvest Tech</span>
+            </button>
+            <button onclick="switchTab('team')" id="btn-team" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2 text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-users"></i><span>Team A-Squad</span>
+            </button>
+        </nav>
+
+        <!-- TAB 1: SIMULATION -->
+        <section id="tab-simulation" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Simulation Canvas Card (2 Cols) -->
+                <div class="lg:col-span-2 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="font-orbitron font-bold text-lg text-cyan-400 flex items-center gap-2">
+                                <i class="fa-solid fa-atom animate-spin"></i> Quantum-Grid Autonomous Simulation
+                            </h2>
+                            <p class="text-xs text-slate-400">Real-time physics, solar absorption & regenerative kinetic harvesting</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2.5 py-1 rounded-md bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold border border-cyan-500/30" id="sim-speed-badge">65 KM/H</span>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Area -->
+                    <div class="relative w-full h-[360px] md:h-[420px] bg-slate-950/80 rounded-xl overflow-hidden border border-cyan-500/30 shadow-inner">
+                        <canvas id="truckCanvas" class="w-full h-full block cursor-pointer"></canvas>
+                        
+                        <!-- HUD Overlays -->
+                        <div class="absolute top-4 left-4 glass-card px-3 py-1.5 rounded-lg text-xs font-mono flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
+                            <span class="text-cyan-300">SOLAR ARRAY: <strong id="hud-solar" class="text-white">94.8%</strong></span>
+                        </div>
+                        <div class="absolute top-4 right-4 glass-card px-3 py-1.5 rounded-lg text-xs font-mono flex items-center space-x-2">
+                            <span class="text-pink-400">REGEN BRAKE: <strong id="hud-regen" class="text-white">Active</strong></span>
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4 text-center">
+                            <span class="bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full text-xs text-slate-300 border border-slate-700">
+                                <i class="fa-solid fa-info-circle text-cyan-400 mr-1"></i> Click simulation or use sliders below to test environments & boost speed!
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Control Deck -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-400">Cruising Speed</span>
+                                <span id="val-speed" class="text-cyan-400 font-mono font-bold">65 km/h</span>
+                            </div>
+                            <input type="range" id="range-speed" min="20" max="120" value="65" class="w-full accent-cyan-400 cursor-pointer" oninput="updateSpeed(this.value)">
+                        </div>
+                        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-400">Sunlight Intensity</span>
+                                <span id="val-sun" class="text-amber-400 font-mono font-bold">85%</span>
+                            </div>
+                            <input type="range" id="range-sun" min="0" max="100" value="85" class="w-full accent-amber-400 cursor-pointer" oninput="updateSun(this.value)">
+                        </div>
+                        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Autonomous AI Mode</span>
+                                <span id="ai-status" class="text-emerald-400 text-xs font-bold font-mono">ENGAGED</span>
+                            </div>
+                            <button onclick="toggleAI()" id="btn-ai" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs font-bold transition">
+                                Toggle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Metrics Sidebar (1 Col) -->
+                <div class="space-y-4">
+                    <div class="glass-card rounded-2xl p-5 space-y-4">
+                        <h3 class="font-orbitron font-bold text-sm text-pink-400 flex items-center gap-2">
+                            <i class="fa-solid fa-gauge-high"></i> Live Telemetry Feed
+                        </h3>
+
+                        <div class="space-y-3 font-mono">
+                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                                <span class="text-xs text-slate-400">Battery Capacity</span>
+                                <span class="text-emerald-400 font-bold" id="stat-battery">98.4 kWh</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                                <span class="text-xs text-slate-400">Solar Generation</span>
+                                <span class="text-amber-400 font-bold" id="stat-solar">4.8 kW/h</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                                <span class="text-xs text-slate-400">Kinetic Recovery</span>
+                                <span class="text-cyan-400 font-bold" id="stat-regen">12.2 kW</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                                <span class="text-xs text-slate-400">Cargo Payload</span>
+                                <span class="text-purple-400 font-bold">24,500 KG</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <button onclick="triggerEmergencyBrake()" class="w-full py-2.5 rounded-xl bg-pink-500/20 text-pink-400 hover:bg-pink-500/30 border border-pink-500/40 font-orbitron font-bold text-xs transition shadow-lg">
+                                <i class="fa-solid fa-triangle-exclamation mr-2"></i> TEST REGEN BRAKING
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Spec Highlights -->
+                    <div class="glass-card rounded-2xl p-5 space-y-3">
+                        <h4 class="font-orbitron font-bold text-xs text-cyan-400">TRUCK ARCHITECTURE</h4>
+                        <ul class="text-xs text-slate-300 space-y-2">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Perovskite Solar Skin Roof</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Dual Axle Magnetic Regen-Brakes</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> AI Smart-Route Energy Predictor</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: TELEMETRY & POWER -->
+        <section id="tab-telemetry" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card rounded-2xl p-6 space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold border border-cyan-500/30">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg text-cyan-400">Solar Photovoltaic Skin</h3>
+                    <p class="text-sm text-slate-300">
+                        Flexible multi-junction Perovskite solar cells bonded seamlessly across the 18-wheeler’s extended trailer roof and cab aerodynamic fairing.
+                    </p>
+                    <div class="pt-2 font-mono text-xs text-cyan-300 space-y-1">
+                        <div>• Efficiency Rating: 31.4%</div>
+                        <div>• Output: Up to 5.2 kW peak</div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card rounded-2xl p-6 space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-xl font-bold border border-pink-500/30">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg text-pink-400">Regenerative Braking</h3>
+                    <p class="text-sm text-slate-300">
+                        Heavy-duty 18-wheel regenerative braking captures kinetic energy during deceleration on highways and steep mountain descents, feeding back into the ultra-capacitor bank.
+                    </p>
+                    <div class="pt-2 font-mono text-xs text-pink-300 space-y-1">
+                        <div>• Energy Recovery: 84%</div>
+                        <div>• Max Decel Torque: 4,200 Nm</div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card rounded-2xl p-6 space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold border border-emerald-500/30">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg text-emerald-400">Quantum-Grid AI Router</h3>
+                    <p class="text-sm text-slate-300">
+                        Real-time power balancing algorithm automatically switches between solar direct drive, battery storage, and ultra-capacitor boost depending on grade and load.
+                    </p>
+                    <div class="pt-2 font-mono text-xs text-emerald-300 space-y-1">
+                        <div>• Latency: &lt; 2 milliseconds</div>
+                        <div>• Optimization: AI Predictive</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: INNOVATION -->
+        <section id="tab-innovation" class="hidden space-y-6">
+            <div class="glass-card rounded-2xl p-8 space-y-6">
+                <h2 class="font-orbitron font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">
+                    HCL Jigsaw Innovation Breakthrough
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
+                    <div class="space-y-3 bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+                        <h4 class="font-orbitron font-bold text-cyan-400 text-base">The Problem: Freight Sector Emissions</h4>
+                        <p>
+                            Commercial semi-trucks account for a disproportionate amount of heavy transport carbon emissions and fuel consumption. Traditional electric trucks require massive, heavy battery packs that reduce payload capacity.
+                        </p>
+                    </div>
+                    <div class="space-y-3 bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+                        <h4 class="font-orbitron font-bold text-pink-400 text-base">Our Solution: Dual-Harvest Semi-Truck</h4>
+                        <p>
+                            By combining continuous roof solar harvesting with high-efficiency kinetic brake recovery on an autonomous 18-wheeler chassis, we reduce battery weight by 35% while extending range infinitely under sunlight.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: TEAM -->
+        <section id="tab-team" class="hidden space-y-6">
+            <div class="glass-card rounded-2xl p-8 space-y-6 text-center max-w-2xl mx-auto">
+                <div class="w-20 h-20 mx-auto rounded-2xl glow-btn-primary flex items-center justify-center text-black font-black text-3xl font-orbitron">
+                    AS
+                </div>
+                <div>
+                    <h2 class="font-orbitron font-bold text-2xl text-cyan-400">Team A-Squad</h2>
+                    <p class="text-sm text-slate-400">HCL Jigsaw Innovation Competition</p>
+                </div>
+
+                <div class="bg-slate-900/60 p-6 rounded-xl border border-cyan-500/30 text-left space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <span class="text-slate-400 text-xs uppercase font-mono">Team Coordinator & Idea Generator</span>
+                        <span class="text-cyan-400 font-bold font-orbitron">Arnav Kulkarni</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400 text-xs uppercase font-mono">Project Focus</span>
+                        <span class="text-pink-400 font-bold">Autonomous Dual-Harvest Smart Truck</span>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-400">
+                    Designed and conceptualized for solving sustainable heavy freight challenges through innovative hybrid energy harvesting.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript for Simulation & Interactivity -->
+    <script>
+        // Theme Switcher
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+        }
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            ['simulation', 'telemetry', 'innovation', 'team'].forEach(id => {
+                document.getElementById('tab-' + id).classList.add('hidden');
+                document.getElementById('btn-' + id).classList.remove('active', 'bg-cyan-500', 'text-black');
+                document.getElementById('btn-' + id).classList.add('text-slate-300', 'hover:bg-slate-800');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+        }
+
+        // Sliders & Controls
+        let currentSpeed = 65;
+        let currentSun = 85;
+        let aiEngaged = true;
+
+        function updateSpeed(val) {
+            currentSpeed = val;
+            document.getElementById('val-speed').innerText = val + ' km/h';
+            document.getElementById('sim-speed-badge').innerText = val + ' KM/H';
+            document.getElementById('stat-regen').innerText = (val * 0.18).toFixed(1) + ' kW';
+        }
+
+        function updateSun(val) {
+            currentSun = val;
+            document.getElementById('val-sun').innerText = val + '%';
+            document.getElementById('hud-solar').innerText = val + '%';
+            document.getElementById('stat-solar').innerText = (val * 0.056).toFixed(1) + ' kW/h';
+        }
+
+        function toggleAI() {
+            aiEngaged = !aiEngaged;
+            const badge = document.getElementById('ai-status');
+            if(aiEngaged) {
+                badge.innerText = "ENGAGED";
+                badge.className = "text-emerald-400 text-xs font-bold font-mono";
+            } else {
+                badge.innerText = "MANUAL";
+                badge.className = "text-amber-400 text-xs font-bold font-mono";
+            }
+        }
+
+        function triggerEmergencyBrake() {
+            let origSpeed = currentSpeed;
+            currentSpeed = 10;
+            document.getElementById('range-speed').value = 10;
+            updateSpeed(10);
+            document.getElementById('hud-regen').innerText = "MAX REGEN!";
+            setTimeout(() => {
+                currentSpeed = origSpeed;
+                document.getElementById('range-speed').value = origSpeed;
+                updateSpeed(origSpeed);
+                document.getElementById('hud-regen').innerText = "Active";
+            }, 1500);
+        }
+
+        // Canvas Simulation
+        const canvas = document.getElementById('truckCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let roadOffset = 0;
+        let particles = [];
+        for(let i=0; i<30; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: canvas.height - 80 + (Math.random() * 40),
+                speed: 2 + Math.random() * 4,
+                size: 1 + Math.random() * 2
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Background Sky / Grid
+            ctx.fillStyle = '#090a0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Horizon Glow
+            let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, 'rgba(0, 243, 255, 0.05)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0.8)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Road
+            const roadY = canvas.height - 90;
+            ctx.fillStyle = '#121824';
+            ctx.fillRect(0, roadY, canvas.width, 90);
+
+            // Road markings
+            roadOffset = (roadOffset + currentSpeed * 0.1) % 40;
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([20, 20]);
+            ctx.lineDashOffset = -roadOffset;
+            ctx.beginPath();
+            ctx.moveTo(0, roadY + 45);
+            ctx.lineTo(canvas.width, roadY + 45);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw Particles (Energy Flow)
+            ctx.fillStyle = '#39ff14';
+            particles.forEach(p => {
+                p.x -= p.speed * (currentSpeed / 50);
+                if(p.x < 0) p.x = canvas.width;
+                ctx.fillRect(p.x, p.y, p.size * 2, p.size);
+            });
+
+            // Draw Smart Truck (Semi-Trailer 18-Wheeler)
+            const truckX = canvas.width / 2 - 120;
+            const truckY = roadY - 75;
+
+            // Trailer
+            ctx.fillStyle = '#1e293b';
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2;
+            ctx.fillRect(truckX - 100, truckY + 5, 200, 55);
+            ctx.strokeRect(truckX - 100, truckY + 5, 200, 55);
+
+            // Solar Roof Panels on Trailer
+            ctx.fillStyle = '#38bdf8';
+            for(let i=0; i<6; i++) {
+                ctx.fillRect(truckX - 90 + (i * 32), truckY + 2, 28, 5);
+            }
+
+            // Truck Cab
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(truckX + 100, truckY - 10, 75, 70);
+            ctx.strokeRect(truckX + 100, truckY - 10, 75, 70);
+
+            // Cab Windshield
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.3)';
+            ctx.fillRect(truckX + 145, truckY, 25, 30);
+
+            // Wheels (18-wheeler dual setup represented)
+            const wheelRadius = 16;
+            const wheelY = roadY + 5;
+            [truckX - 80, truckX - 50, truckX + 20, truckX + 110, truckX + 145].forEach(wx => {
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(wx, wheelY, wheelRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#39ff14';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // Hubcap
+                ctx.fillStyle = '#00f3ff';
+                ctx.beginPath();
+                ctx.arc(wx, wheelY, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Autonomous Sensor Ring atop cab
+            ctx.fillStyle = '#ff007f';
+            ctx.beginPath();
+            ctx.arc(truckX + 130, truckY - 15, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
