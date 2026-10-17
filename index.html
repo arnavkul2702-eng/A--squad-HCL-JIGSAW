@@ -4,297 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum-Grid Autonomous Dual-Harvest Smart Truck | HCL Jigsaw</title>
-    <!-- Tailwind CSS & FontAwesome & Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        orbitron: ['Orbitron', 'sans-serif'],
-                        inter: ['Inter', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Multi-Theme Color Palettes */
         :root[data-theme="cyberpunk"] {
             --bg-grad: linear-gradient(135deg, #090a0f 0%, #121824 50%, #1a0b2e 100%);
-            --card-bg: rgba(18, 24, 38, 0.75);
+            --card-bg: rgba(18, 24, 38, 0.85);
             --card-border: rgba(0, 243, 255, 0.3);
             --primary: #00f3ff;
             --secondary: #ff007f;
             --accent: #39ff14;
             --text-main: #f0f4f8;
-            --text-muted: #94a3b8;
-            --glow-primary: 0 0 20px rgba(0, 243, 255, 0.4);
-            --glow-secondary: 0 0 20px rgba(255, 0, 127, 0.4);
         }
-        :root[data-theme="matrix"] {
-            --bg-grad: linear-gradient(135deg, #020802 0%, #051a05 50%, #0a2e0a 100%);
-            --card-bg: rgba(5, 26, 5, 0.8);
-            --card-border: rgba(57, 255, 20, 0.4);
-            --primary: #39ff14;
-            --secondary: #00ff66;
-            --accent: #ccff00;
-            --text-main: #e2ffe2;
-            --text-muted: #8fa88f;
-            --glow-primary: 0 0 20px rgba(57, 255, 20, 0.5);
-            --glow-secondary: 0 0 20px rgba(0, 255, 102, 0.4);
-        }
-        :root[data-theme="solarized"] {
-            --bg-grad: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            --card-bg: rgba(30, 41, 59, 0.8);
-            --card-border: rgba(245, 158, 11, 0.4);
-            --primary: #f59e0b;
-            --secondary: #38bdf8;
-            --accent: #10b981;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --glow-primary: 0 0 20px rgba(245, 158, 11, 0.4);
-            --glow-secondary: 0 0 20px rgba(56, 189, 248, 0.4);
-        }
-        :root[data-theme="quantum"] {
-            --bg-grad: linear-gradient(135deg, #050515 0%, #120c2e 50%, #20053b 100%);
-            --card-bg: rgba(20, 14, 40, 0.8);
-            --card-border: rgba(168, 85, 247, 0.4);
-            --primary: #c084fc;
-            --secondary: #ec4899;
-            --accent: #38bdf8;
-            --text-main: #faf5ff;
-            --text-muted: #cbd5e1;
-            --glow-primary: 0 0 20px rgba(192, 132, 252, 0.5);
-            --glow-secondary: 0 0 20px rgba(236, 72, 153, 0.4);
-        }
-
-        body {
-            background: var(--bg-grad);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
+        body { background: var(--bg-grad); color: var(--text-main); font-family: 'Inter', sans-serif; min-height: 100vh; }
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        .glow-btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            box-shadow: var(--glow-primary);
-            transition: all 0.3s ease;
-        }
-        .glow-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--glow-secondary);
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: #090a0f;
-            font-weight: 700;
-            box-shadow: var(--glow-primary);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #090a0f; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        .glass-card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid var(--card-border); }
+        .glow-btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
+        .tab-btn.active { background: var(--primary); color: #090a0f; font-weight: 700; }
     </style>
 </head>
-<body class="selection:bg-cyan-500 selection:text-black">
+<body class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
 
-    <!-- Top Navigation Bar -->
-    <header class="sticky top-0 z-50 glass-card border-b border-cyan-500/20 px-4 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl glow-btn-primary flex items-center justify-center text-black font-black text-xl font-orbitron">
-                QT
-            </div>
-            <div>
-                <h1 class="font-orbitron font-black text-lg lg:text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-green-400">
-                    QUANTUM-GRID 18-WHEELER
-                </h1>
-                <p class="text-xs text-slate-400">HCL Jigsaw Innovation Round | Team A-Squad</p>
-            </div>
+    <header class="glass-card p-4 rounded-2xl flex justify-between items-center flex-wrap gap-4">
+        <div>
+            <h1 class="font-orbitron font-black text-xl text-cyan-400">QUANTUM-GRID SMART TRUCK</h1>
+            <p class="text-xs text-slate-400">HCL Jigsaw | Team A-Squad</p>
         </div>
-
-        <!-- Theme Switcher & Quick Controls -->
-        <div class="flex items-center space-x-3">
-            <div class="flex bg-slate-900/80 p-1 rounded-xl border border-slate-700">
-                <button onclick="setTheme('cyberpunk')" title="Cyberpunk" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-cyan-400 hover:bg-slate-800">Cyber</button>
-                <button onclick="setTheme('matrix')" title="Matrix" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-green-400 hover:bg-slate-800">Matrix</button>
-                <button onclick="setTheme('solarized')" title="Solar" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-amber-400 hover:bg-slate-800">Solar</button>
-                <button onclick="setTheme('quantum')" title="Quantum" class="px-3 py-1 rounded-lg text-xs font-semibold transition text-purple-400 hover:bg-slate-800">Quantum</button>
-            </div>
-            <span class="hidden md:inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse">
-                <i class="fa-solid fa-circle text-[8px] mr-1"></i> AI Core Online
-            </span>
+        <div class="flex gap-2">
+            <button onclick="switchTab('sim')" id="btn-sim" class="tab-btn active px-4 py-2 rounded-xl text-xs font-bold transition">Simulation</button>
+            <button onclick="switchTab('team')" id="btn-team" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 transition">Team A-Squad</button>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <!-- SIMULATION TAB -->
+    <section id="tab-sim" class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <h2 class="font-orbitron font-bold text-cyan-400 text-base"><i class="fa-solid fa-wind mr-2"></i> Solar Roof & Micro-Turbine Simulation</h2>
+            <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-lg text-xs font-mono" id="speed-label">Speed: 65 KM/H</span>
+        </div>
 
-        <!-- Navigation Tabs -->
-        <nav class="flex flex-wrap gap-2 glass-card p-2 rounded-2xl justify-center lg:justify-start">
-            <button onclick="switchTab('simulation')" id="btn-simulation" class="tab-btn active px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
-                <i class="fa-solid fa-truck-fast"></i><span>Smart Truck Sim</span>
-            </button>
-            <button onclick="switchTab('telemetry')" id="btn-telemetry" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2 text-slate-300 hover:bg-slate-800">
-                <i class="fa-solid fa-chart-line"></i><span>Telemetry & Power</span>
-            </button>
-            <button onclick="switchTab('innovation')" id="btn-innovation" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2 text-slate-300 hover:bg-slate-800">
-                <i class="fa-solid fa-lightbulb"></i><span>Dual-Harvest Tech</span>
-            </button>
-            <button onclick="switchTab('team')" id="btn-team" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2 text-slate-300 hover:bg-slate-800">
-                <i class="fa-solid fa-users"></i><span>Team A-Squad</span>
-            </button>
-        </nav>
+        <div class="relative w-full h-[380px] bg-slate-950 rounded-xl overflow-hidden border border-cyan-500/30">
+            <canvas id="simCanvas" class="w-full h-full block"></canvas>
+        </div>
 
-        <!-- TAB 1: SIMULATION -->
-        <section id="tab-simulation" class="space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Simulation Canvas Card (2 Cols) -->
-                <div class="lg:col-span-2 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h2 class="font-orbitron font-bold text-lg text-cyan-400 flex items-center gap-2">
-                                <i class="fa-solid fa-atom animate-spin"></i> Solar & Wind Turbine Hybrid Simulation
-                            </h2>
-                            <p class="text-xs text-slate-400">Real-time solar skin absorption & aerodynamic wind turbine generation</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="px-2.5 py-1 rounded-md bg-cyan-500/20 text-cyan-400 text-xs font-mono font-bold border border-cyan-500/30" id="sim-speed-badge">65 KM/H</span>
-                        </div>
-                    </div>
-
-                    <!-- Canvas Area -->
-                    <div class="relative w-full h-[360px] md:h-[420px] bg-slate-950/80 rounded-xl overflow-hidden border border-cyan-500/30 shadow-inner">
-                        <canvas id="truckCanvas" class="w-full h-full block cursor-pointer"></canvas>
-                        
-                        <!-- HUD Overlays -->
-                        <div class="absolute top-4 left-4 glass-card px-3 py-1.5 rounded-lg text-xs font-mono flex items-center space-x-2">
-                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                            <span class="text-amber-300">SOLAR ROOF: <strong id="hud-solar" class="text-white">85%</strong></span>
-                        </div>
-                        <div class="absolute top-4 right-4 glass-card px-3 py-1.5 rounded-lg text-xs font-mono flex items-center space-x-2">
-                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                            <span class="text-cyan-300">WIND TURBINE: <strong id="hud-turbine" class="text-white">Spinning</strong></span>
-                        </div>
-                        <div class="absolute bottom-4 left-4 right-4 text-center">
-                            <span class="bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full text-xs text-slate-300 border border-slate-700">
-                                <i class="fa-solid fa-info-circle text-cyan-400 mr-1"></i> Watch the roof solar panel beam light and the front aerodynamic wind turbine spin with speed!
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Interactive Control Deck -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-slate-400">Truck Speed (Wind)</span>
-                                <span id="val-speed" class="text-cyan-400 font-mono font-bold">65 km/h</span>
-                            </div>
-                            <input type="range" id="range-speed" min="20" max="120" value="65" class="w-full accent-cyan-400 cursor-pointer" oninput="updateSpeed(this.value)">
-                        </div>
-                        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-slate-400">Sunlight Intensity</span>
-                                <span id="val-sun" class="text-amber-400 font-mono font-bold">85%</span>
-                            </div>
-                            <input type="range" id="range-sun" min="0" max="100" value="85" class="w-full accent-amber-400 cursor-pointer" oninput="updateSun(this.value)">
-                        </div>
-                        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs text-slate-400 block">Autonomous AI Mode</span>
-                                <span id="ai-status" class="text-emerald-400 text-xs font-bold font-mono">ENGAGED</span>
-                            </div>
-                            <button onclick="toggleAI()" id="btn-ai" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs font-bold transition">
-                                Toggle
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Live Metrics Sidebar (1 Col) -->
-                <div class="space-y-4">
-                    <div class="glass-card rounded-2xl p-5 space-y-4">
-                        <h3 class="font-orbitron font-bold text-sm text-pink-400 flex items-center gap-2">
-                            <i class="fa-solid fa-gauge-high"></i> Live Telemetry Feed
-                        </h3>
-
-                        <div class="space-y-3 font-mono">
-                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                                <span class="text-xs text-slate-400">Battery Capacity</span>
-                                <span class="text-emerald-400 font-bold" id="stat-battery">98.4 kWh</span>
-                            </div>
-                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                                <span class="text-xs text-slate-400">Solar Roof Generation</span>
-                                <span class="text-amber-400 font-bold" id="stat-solar">4.8 kW/h</span>
-                            </div>
-                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                                <span class="text-xs text-slate-400">Wind Turbine Gen</span>
-                                <span class="text-cyan-400 font-bold" id="stat-turbine">3.2 kW/h</span>
-                            </div>
-                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                                <span class="text-xs text-slate-400">Cargo Payload</span>
-                                <span class="text-purple-400 font-bold">24,500 KG</span>
-                            </div>
-                        </div>
-
-                        <div class="pt-2">
-                            <button onclick="triggerEmergencyBrake()" class="w-full py-2.5 rounded-xl bg-pink-500/20 text-pink-400 hover:bg-pink-500/30 border border-pink-500/40 font-orbitron font-bold text-xs transition shadow-lg">
-                                <i class="fa-solid fa-bolt mr-2"></i> BOOST TURBINE SPEED
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Quick Spec Highlights -->
-                    <div class="glass-card rounded-2xl p-5 space-y-3">
-                        <h4 class="font-orbitron font-bold text-xs text-cyan-400">DUAL-HARVEST SPECS</h4>
-                        <ul class="text-xs text-slate-300 space-y-2">
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Perovskite Solar Skin Roof</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Front Air-Intake Micro-Turbine</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Dual Energy AI Storage Grid</li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                <label class="text-xs text-slate-400 block mb-1">Truck Speed</label>
+                <input type="range" min="20" max="120" value="65" class="w-full accent-cyan-400" oninput="speed = Number(this.value); document.getElementById('speed-label').innerText = 'Speed: ' + speed + ' KM/H';">
             </div>
-        </section>
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                <label class="text-xs text-slate-400 block mb-1">Sunlight Intensity</label>
+                <input type="range" min="0" max="100" value="85" class="w-full accent-amber-400" oninput="sunPower = Number(this.value);">
+            </div>
+        </div>
+    </section>
 
-        <!-- TAB 2: TELEMETRY & POWER -->
-        <section id="tab-telemetry" class="hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div class="glass-card rounded-2xl p-6 space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl font-bold border border-amber-500/30">
-                        <i class="fa-solid fa-sun"></i>
-                    </div>
-                    <h3 class="font-orbitron font-bold text-lg text-amber-400">Solar Photovoltaic Skin</h3>
-                    <p class="text-sm text-slate-300">
-                        Flexible multi-junction Perovskite solar cells bonded seamlessly across the 18-wheeler’s extended trailer roof and cab fairing.
-                    </p>
-                    <div class="pt-2 font-mono text-xs text-amber-300 space-y-1">
-                        <div>• Efficiency Rating: 31.4%</div>
-                        <div>• Output: Up to 5.2 kW peak</div>
-                    </div>
-                </div>
+    <!-- TEAM TAB -->
+    <section id="tab-team" class="glass-card p-8 rounded-2xl space-y-6 hidden max-w-xl mx-auto text-center">
+        <div class="w-16 h-16 mx-auto rounded-xl glow-btn-primary flex items-center justify-center text-black font-black text-2xl font-orbitron">AS</div>
+        <h2 class="font-orbitron font-bold text-2xl text-cyan-400">Team A-Squad</h2>
+        <div class="bg-slate-900/60 p-5 rounded-xl border border-cyan-500/30 text-left space-y-3 font-mono text-xs">
+            <div class="flex justify-between border-b border-slate-800 pb-2">
+                <span class="text-slate-400">Team Coordinator & Idea Generator</span>
+                <span class="text-cyan-400 font-bold">Arnav Kulkarni</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400">Project Focus</span>
+                <span class="text-pink-400 font-bold">Autonomous Dual-Harvest Smart Truck</span>
+            </div>
+        </div>
+    </section>
 
-                <!-- Card 2 -->
-                <div class="glass-card rounded-2xl p-6 space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold border border-cyan-500/30">
-                        <i class="fa-solid fa-wind"></i>
-                    </div>
-                    <h3 class="font-orbitron font-bold text-lg text-cyan-400">Aerodynamic Micro-Turbines</h3>
-                    <p class="text-sm text-slate-300">
-                        Front-mounted smart air
+    <script>
+        function switchTab(tab) {
+            document.getElementById('tab-sim').classList.toggle('hidden', tab !== 'sim');
+            document.getElementById('tab-team').classList.toggle('hidden', tab !== 'team');
+            document.getElementById('btn-sim').classList.toggle('active', tab === 'sim');
+            document.getElementById('btn-team').classList.toggle('active', tab === 'team');
+        }
+
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let speed = 65;
+        let sunPower = 85;
+        let roadOffset = 0;
+        let turbineAngle = 0;
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Sky background
+            ctx.fillStyle = '#090a0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Road
+            let roadY = canvas.height - 80;
+            ctx.fillStyle = '#121824';
+            ctx.fillRect(0, roadY, canvas.width, 80);
+
+            // Road lines
+            roadOffset = (roadOffset + speed * 0.1) % 40;
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([20, 20]);
+            ctx.lineDashOffset = -roadOffset;
+            ctx.beginPath();
+            ctx.moveTo(0, roadY + 40);
+            ctx.lineTo(canvas.width, roadY + 40);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Truck coordinates
+            let truckX = canvas.width / 2 - 100;
+            let truckY = roadY - 70;
+
+            // Trailer body
+            ctx.fillStyle = '#1e293b';
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2;
+            ctx.fillRect(truckX - 90, truckY, 180, 50);
+            ctx.strokeRect(truckX - 90, truckY, 180, 50);
+
+            // Solar Roof Panels
+            ctx.fillStyle = sunPower > 0 ? '#f59e0b' : '#334155';
+            for(let i=0; i<5; i++) {
+                ctx.fillRect(truckX - 80 + (i * 32), truckY - 4, 26, 4);
+            }
+
+            // Cab
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(truckX + 90, truckY - 10, 65, 60);
+            ctx.strokeRect(truckX + 90, truckY - 10, 65, 60);
+
+            // Wind Turbine in front bumper
+            turbineAngle += speed * 0.15;
+            let turbX = truckX + 155;
+            let turbY = truckY + 30;
+            ctx.fillStyle = '#334155';
+            ctx.beginPath();
+            ctx.arc(turbX, turbY, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.save();
+            ctx.translate(turbX, turbY);
+            ctx.rotate(turbineAngle);
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2;
+            for(let b=0; b<3; b++) {
+                ctx.rotate((Math.PI * 2) / 3);
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, -8);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // Wheels
+            [truckX - 70, truckX - 40, truckX + 30, truckX + 100, truckX + 135].forEach(wx => {
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(wx, roadY, 14, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#39ff14';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
